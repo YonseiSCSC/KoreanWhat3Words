@@ -1,0 +1,96 @@
+<!-- 데모 URL: http://yoobato.com/what3words.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>KoreanWhat3Words</title>
+
+    <!-- Jquery (참고: ) -->
+    <script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
+    <!-- 다음 우편번호 검색 API (참고: http://postcode.map.daum.net/guide) -->
+    <script type="text/javascript" src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+</head>
+<body>
+    <hr />
+    <h2>우리나라 주소 -> What3Words 단어주소</h2>
+    <hr />
+    <ol type="1">
+        <li>
+            <h3><a href="http://postcode.map.daum.net/guide" target="_blank">다음 우편번호 조회 API</a>를 사용하여 주소를 받아온다</h3>
+            <div>
+                <input type="text" id="postcode" placeholder="우편번호" readonly>
+                <button id="find_postcode_btn">우편번호 찾기</button>
+            </div>
+            <div>
+                <input type="text" id="address" placeholder="주소" readonly>
+            </div>
+        </li>
+        <li>
+            <h3>다음 주소->좌표 변환 API를 사용하여 좌표를 받아온다</h3>
+            TBD
+        </li>
+        <li>
+            <h3>What3Words 좌표->단어주소 변환 API를 사용하여 What3Words 단어주소를 받아온다</h3>
+            TBD
+        </li>
+    </ol>
+
+    <hr />
+    <h2>What3Words 단어주소 -> 우리나라 주소</h2>
+    <hr />
+    <ol type="1">
+        <li>
+            <h3>What3Words 단어주소->좌표 변환 API를 사용하여 좌표를 받아온다</h3>
+            TBD
+        </li>
+        <li>
+            <h3>다음 좌표->주소 변환 API를 사용하여 주소를 받아온다</h3>
+            TBD
+        </li>
+    </ol>
+
+    <hr />
+
+    <!-- 동적으로 Javascript 로딩 -->
+    <script type="text/javascript">
+        $().ready(function() {
+            $("#find_postcode_btn").click(function () {
+                new daum.Postcode({
+                    oncomplete: function(data) {
+                        // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                        // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                        var fullAddr = ''; // 최종 주소 변수
+                        var extraAddr = ''; // 조합형 주소 변수
+
+                        // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                        if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                            fullAddr = data.roadAddress;
+
+                        } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                            fullAddr = data.jibunAddress;
+                        }
+
+                        // 사용자가 선택한 주소가 도로명 타입일때 조합한다.
+                        if(data.userSelectedType === 'R'){
+                            //법정동명이 있을 경우 추가한다.
+                            if(data.bname !== ''){
+                                extraAddr += data.bname;
+                            }
+                            // 건물명이 있을 경우 추가한다.
+                            if(data.buildingName !== ''){
+                                extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                            }
+                            // 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+                            fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+                        }
+
+                        // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                        $("#postcode").value = data.zonecode;   // 5자리 새우편번호를 사용
+                        $("#address").value = fullAddr;
+                    }
+                }).open();
+            });
+        });
+    </script>
+</body>
+</html>
