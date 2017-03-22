@@ -54,6 +54,10 @@
     <!-- 동적으로 Javascript 로딩 -->
     <script type="text/javascript">
         $(document).ready(function() {
+            // TODO: 다음 우편번호 조회 API가 서버에 올라가 있을 때만 정상적으로 동작하기 때문에, 우선 테스트로 값을 미리 넣어놈. 우편번호 조회를 했다고 가정.
+            $("#postcode").val("03722");
+            $("#address").val("서울 서대문구 연세로 50 (신촌동, 연세대학교)");
+
             $("#find_postcode_btn").click(function () {
                 new daum.Postcode({
                     oncomplete: function(data) {
