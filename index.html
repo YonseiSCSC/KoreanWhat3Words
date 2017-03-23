@@ -29,7 +29,17 @@
         </li>
         <li>
             <h3>다음 주소->좌표 변환 API를 사용하여 좌표를 받아온다</h3>
-            TBD
+            <div>
+                <button id="address2coords_btn">주소->좌표 변환</button>
+            </div>
+            <div>
+                <label>위도</label>
+                <input type="text" id="lat" placeholder="위도" readonly>
+            </div>
+            <div>
+                <label>경도</label>
+                <input type="text" id="lng" placeholder="경도" readonly>
+            </div>
         </li>
         <li>
             <h3>What3Words 좌표->단어주소 변환 API를 사용하여 What3Words 단어주소를 받아온다</h3>
@@ -61,7 +71,7 @@
                 alert('conf.js file is missing');
                 return;
             }
-            
+
             console.log("Daum API Key: " + conf.daumApiKey);
             console.log("What3Words API Key: " + conf.what3WordsApiKey);
 
@@ -69,8 +79,24 @@
             $("#postcode").val("03722");
             $("#address").val("서울 서대문구 연세로 50 (신촌동, 연세대학교)");
 
-            $("#find_postcode_btn").click(function () {
+            $("#find_postcode_btn").click(function() {
                 executeDaumPostcode();
+            });
+
+            // 주소 -> 좌표 변환
+            $("#address2coords_btn").click(function() {
+                var address = $("#address").val();
+                // jQuery Ajax
+                $.get("https://apis.daum.net/local/geo/addr2coord?apikey=" + conf.daumApiKey + "&q=" + address + "&output=json", function(data) {
+
+                    if (data.channel.totalCount <= 0) {
+                        alert('검색 결과가 없습니다');
+                        return;
+                    }
+
+                    $("#lat").val(data.channel.item[0].lat);
+                    $("#lng").val(data.channel.item[0].lng);
+                });
             });
         });
 
