@@ -86,7 +86,7 @@
             // 주소 -> 좌표 변환
             $("#address2coords_btn").click(function() {
                 var address = $("#address").val();
-                // jQuery Ajax
+                // jQuery Ajax (Cross domain 이슈 때문에 dataType으로 jsonp를 사용한다)
                 $.get("https://apis.daum.net/local/geo/addr2coord?apikey=" + conf.daumApiKey + "&q=" + address + "&output=json", function(data) {
 
                     if (data.channel.totalCount <= 0) {
@@ -96,7 +96,7 @@
 
                     $("#lat").val(data.channel.item[0].lat);
                     $("#lng").val(data.channel.item[0].lng);
-                });
+                }, "jsonp");
             });
         });
 
