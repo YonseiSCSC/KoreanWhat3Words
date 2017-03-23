@@ -10,7 +10,7 @@
     <!-- 다음 우편번호 검색 API (참고: http://postcode.map.daum.net/guide) -->
     <script type="text/javascript" src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
     <!-- API Key를 담고 있는 conf.js 로드 -->
-    <script type="text/javascript" src="js/conf.js"></script>    
+    <script type="text/javascript" src="js/conf.js"></script>
 </head>
 <body>
     <hr />
@@ -56,12 +56,18 @@
     <!-- 동적으로 Javascript 로딩 -->
     <script type="text/javascript">
         $(document).ready(function() {
+            // conf.js 파일에서 생성된 conf variable 확인 
+            if (typeof conf === 'undefined') {
+                alert('conf.js file is missing');
+                return;
+            }
+            
+            console.log("Daum API Key: " + conf.daumApiKey);
+            console.log("What3Words API Key: " + conf.what3WordsApiKey);
+
             // TODO: 다음 우편번호 조회 API가 서버에 올라가 있을 때만 정상적으로 동작하기 때문에, 우선 테스트로 값을 미리 넣어놈. 우편번호 조회를 했다고 가정.
             $("#postcode").val("03722");
             $("#address").val("서울 서대문구 연세로 50 (신촌동, 연세대학교)");
-
-            console.log("Daum API Key: " + conf.daumApiKey);
-            console.log("What3Words API Key: " + conf.what3WordsApiKey);
 
             $("#find_postcode_btn").click(function () {
                 executeDaumPostcode();
